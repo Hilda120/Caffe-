@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bean & Bloom CAFFE — Good Coffee, Better Days</title>
+    
+    <!-- Google Fonts: Lora/Playfair Display untuk judul serif elegan & Plus Jakarta Sans untuk UI bersih -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            hero: '#DCDCDC',
+                            card: '#E5E5E5',
+                            pillInactive: '#A6A6A6',
+                            dark: '#141414',
+                            muted: '#595959'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar dan efek halus */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c4c4c4;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+
+        /* Animasi masuk halus */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.45s ease-out forwards;
+        }
+
+        /* Styling khusus input pada form reservasi agar mirip desain Figma namun fungsional */
+        .reserve-input {
+            background-color: #C9C9C9;
+            color: #141414;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .reserve-input::placeholder {
+            color: #6B6B6B;
+        }
+        .reserve-input:focus {
+            background-color: #FFFFFF;
+            outline: 2px solid #141414;
+        }
+
+        /* Active nav indicator */
+        .nav-link.active {
+            color: #000000;
+            font-weight: 700;
+            position: relative;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #000000;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-white text-[#141414] font-sans antialiased selection:bg-black selection:text-white">
+
+    <!-- ==================== NAVBAR (Sticky Top) ==================== -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Kiri: Logo Cangkir Kopi + Bean & Bloom CAFFE -->
+            <a href="#home" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 flex items-center justify-center text-[#2C1E16] transition-transform duration-300 group-hover:scale-105">
+                    <!-- Custom SVG Logo Cangkir Kopi Minimalis -->
+                    <svg viewBox="0 0 48 48" fill="none" class="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 10C16 7.5 18.5 7 18.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M23 9C23 6.5 25.5 6 25.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M30 10C30 7.5 32.5 7 32.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M10 17H34V26C34 31.5228 29.5228 36 24 36H20C14.4772 36 10 31.5228 10 26V17Z" stroke="currentColor" stroke-width="2.2" fill="#F8F5F2"/>
+                        <path d="M34 20H37.5C39.9853 20 42 22.0147 42 24.5C42 26.9853 39.9853 29 37.5 29H34" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                        <path d="M7 39.5C13 41.5 31 41.5 37 39.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                        <circle cx="22" cy="26" r="3.5" fill="#6F4E37" opacity="0.85"/>
+                    </svg>
+                </div>
+                <div class="leading-tight">
+                    <span class="font-serif font-bold text-lg sm:text-xl tracking-tight text-black block">Bean & Bloom</span>
+                    <span class="text-[10px] font-semibold tracking-[0.25em] text-gray-500 uppercase block">CAFFE</span>
+                </div>
+            </a>
+
+            <!-- Tengah: Navigasi Desktop -->
+            <nav class="hidden md:flex items-center gap-8 text-xs font-semibold tracking-widest uppercase text-gray-600">
+                <a href="#home" class="nav-link active hover:text-black transition-colors py-1">HOME</a>
+                <a href="#menu" class="nav-link hover:text-black transition-colors py-1">MENU</a>
+                <a href="#about" class="nav-link hover:text-black transition-colors py-1">ABOUT</a>
+                <a href="#gallery" class="nav-link hover:text-black transition-colors py-1">GALLERY</a>
+                <a href="#contact" class="nav-link hover:text-black transition-colors py-1">CONTACT</a>
+            </nav>
+
+            <!-- Kanan: Ikon Cart + Mobile Menu Toggle -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleCart()" aria-label="Buka Keranjang Belanja" class="relative p-2.5 rounded-full hover:bg-gray-100 transition-colors text-black focus:outline-none">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 stroke-[2.2]"></i>
+                    <span id="cart-badge" class="absolute -top-0.5 -right-0.5 bg-black text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center transition-transform scale-100">
+                        0
+                    </span>
+                </button>
+
+                <!-- Tombol Hamburger untuk Mobile -->
+                <button onclick="toggleMobileMenu()" aria-label="Menu Navigasi" class="md:hidden p-2.5 rounded-full hover:bg-gray-100 transition-colors text-black">
+                    <i data-lucide="menu" id="mobile-menu-icon" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dropdown Navigasi Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 px-6 py-4 space-y-3 text-xs font-semibold tracking-widest uppercase">
+            <a href="#home" onclick="closeMobileMenu()" class="block py-2 text-black">HOME</a>
+            <a href="#menu" onclick="closeMobileMenu()" class="block py-2 text-gray-600 hover:text-black">MENU</a>
+            <a href="#about" onclick="closeMobileMenu()" class="block py-2 text-gray-600 hover:text-black">ABOUT</a>
+            <a href="#gallery" onclick="closeMobileMenu()" class="block py-2 text-gray-600 hover:text-black">GALLERY</a>
+            <a href="#contact" onclick="closeMobileMenu()" class="block py-2 text-gray-600 hover:text-black">CONTACT</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ==================== SECTION 1: HOME (Desktop - 1) ==================== -->
+        <section id="home" class="pt-4 sm:pt-6 pb-14">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Hero Banner abu-abu lembut sesuai desain -->
+                <div class="bg-[#DCDCDC] rounded-2xl p-6 sm:p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center shadow-sm">
+                    
+                    <!-- Kolom Kiri: Teks & CTA Pill Hitam -->
+                    <div class="lg:col-span-6 space-y-4 sm:space-y-5">
+                        <p class="text-xs sm:text-sm font-semibold tracking-wide text-gray-700">
+                            Good Coffee, Better Days
+                        </p>
+                        <h1 class="font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold text-[#141414] leading-[1.18]">
+                            Selamat Datang di <br class="hidden sm:inline">Bean & Bloom
+                        </h1>
+                        <p class="text-sm sm:text-base text-gray-700 leading-relaxed max-w-md">
+                            Tempat di mana kopi, suasana, dan cerita bertemu. Nikmati secangkir kebahagiaan di setiap tegukan.
+                        </p>
+                        <div class="pt-2">
+                            <a href="#menu" class="inline-flex items-center gap-2.5 bg-black text-white text-xs sm:text-sm font-medium px-7 py-3.5 rounded-full hover:bg-neutral-800 active:scale-95 transition-all shadow-md">
+                                <span>Lihat Menu</span>
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Kolom Kanan: Foto Interior Kafe Estetik -->
+                    <div class="lg:col-span-6">
+                        <div class="overflow-hidden rounded-xl shadow-md aspect-[16/10] bg-neutral-300">
+                            <img 
+                                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1000&q=80" 
+                                alt="Interior hangat Bean & Bloom Caffe" 
+                                onerror="this.src='https://placehold.co/800x500/C9C9C9/141414?text=Bean+%26+Bloom+Interior'"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-bagian: Menu Favorite -->
+                <div class="mt-12 sm:mt-16">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="font-serif text-xl sm:text-2xl font-bold text-[#141414]">Menu Favorite</h2>
+                        <a href="#menu" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-black hover:opacity-70 transition-opacity">
+                            <span>Lihat Semua</span>
+                            <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+
+                    <!-- Grid 4 Produk Favorite -->
+                    <div id="favorite-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+                        <!-- Diisi otomatis via JavaScript agar sinkron dengan keranjang belanja -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Pembatas tipis antar section -->
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <hr class="border-gray-200">
+        </div>
+
+        <!-- ==================== SECTION 2: MENU KAMI (Frame 1) ==================== -->
+        <section id="menu" class="py-14 sm:py-20 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Header Menu Kami -->
+                <div class="max-w-xl mb-7">
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#141414] mb-2">Menu Kami</h2>
+                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                        Dari kopi klasik hingga kreasi spesial, semua dibuat dengan bahan terbaik untuk pengalaman terbaik.
+                    </p>
+                </div>
+
+                <!-- Tab Filter Kategori Interaktif (Semua, Kopi, Non-Kopi, Makanan) -->
+                <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-10" id="category-filters">
+                    <button data-category="Semua" class="filter-btn active px-6 py-2 rounded-full text-xs sm:text-sm font-medium bg-black text-white transition-all shadow-sm">
+                        Semua
+                    </button>
+                    <button data-category="Kopi" class="filter-btn px-6 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#A6A6A6] text-[#141414] hover:bg-neutral-400 transition-all">
+                        Kopi
+                    </button>
+                    <button data-category="Non-Kopi" class="filter-btn px-6 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#A6A6A6] text-[#141414] hover:bg-neutral-400 transition-all">
+                        Non-Kopi
+                    </button>
+                    <button data-category="Makanan" class="filter-btn px-6 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#A6A6A6] text-[#141414] hover:bg-neutral-400 transition-all">
+                        Makanan
+                    </button>
+                </div>
+
+                <!-- Grid Menu 4 Kolom -->
+                <div id="menu-grid" class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-12">
+                    <!-- Item menu di-render secara dinamis lewat JS -->
+                </div>
+
+            </div>
+        </section>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <hr class="border-gray-200">
+        </div>
+
+        <!-- ==================== SECTION 3: TENTANG KAMI / ABOUT (Desktop - 4) ==================== -->
+        <section id="about" class="py-16 sm:py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Bagian Atas: 2 Kolom Foto Barista & Deskripsi -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                    
+                    <!-- Kiri: Foto Barista Menyeduh Kopi -->
+                    <div class="lg:col-span-6">
+                        <div class="overflow-hidden rounded-xl shadow-md aspect-[16/10] bg-neutral-200">
+                            <img 
+                                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=80" 
+                                alt="Barista Bean & Bloom menyeduh kopi" 
+                                onerror="this.src='https://placehold.co/800x500/E5E5E5/141414?text=Barista+Bean+%26+Bloom'"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Kanan: Teks Tentang Kami + Tombol Selengkapnya -->
+                    <div class="lg:col-span-6 space-y-5">
+                        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#141414]">Tentang Kami</h2>
+                        <p class="text-sm sm:text-base text-gray-700 leading-relaxed">
+                            Bean & Bloom adalah kedai kopi yang lahir dari kecintaan kami pada kopi dan kebersamaan. Kami percaya bahwa secangkir kopi bukan hanya tentang rasa, tapi juga tentang momen, orang-orang dan cerita yang tercipta di dalamnya.
+                        </p>
+                        <div class="pt-1">
+                            <button onclick="openStoryModal()" class="inline-flex items-center gap-2.5 bg-black text-white text-xs sm:text-sm font-medium px-7 py-3.5 rounded-full hover:bg-neutral-800 active:scale-95 transition-all shadow-sm">
+                                <span>Selengkapnya</span>
+                                <span aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Bawah: 3 Pilar Keunggulan -->
+                <div class="mt-16 sm:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
+                    
+                    <!-- Pilar 1: Kopi Berkualitas -->
+                    <div class="flex flex-col items-center space-y-3 p-4 rounded-2xl hover:bg-gray-50 transition-colors">
+                        <div class="w-14 h-14 flex items-center justify-center text-[#141414]">
+                            <!-- Icon Cangkir Kopi Minimalis -->
+                            <svg viewBox="0 0 48 48" fill="none" class="w-11 h-11" stroke="currentColor" stroke-width="2">
+                                <path d="M18 11C18 8.5 20 8 20 5.5" stroke-linecap="round"/>
+                                <path d="M25 10C25 7.5 27 7 27 4.5" stroke-linecap="round"/>
+                                <path d="M11 18H33V27C33 32.5228 28.5228 37 23 37H21C15.4772 37 11 32.5228 11 27V18Z"/>
+                                <path d="M33 21H36.5C38.9853 21 41 23.0147 41 25.5C41 27.9853 38.9853 30 36.5 30H33" stroke-linecap="round"/>
+                                <path d="M8 41H36" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-bold text-base sm:text-lg text-[#141414]">Kopi Berkualitas</h3>
+                        <p class="text-xs sm:text-sm text-gray-600 max-w-[200px]">
+                            Menggunakan biji kopi pilihan terbaik.
+                        </p>
+                    </div>
+
+                    <!-- Pilar 2: Bahan Segar -->
+                    <div class="flex flex-col items-center space-y-3 p-4 rounded-2xl hover:bg-gray-50 transition-colors">
+                        <div class="w-14 h-14 flex items-center justify-center text-[#141414]">
+                            <!-- Icon Daun Minimalis -->
+                            <svg viewBox="0 0 48 48" fill="none" class="w-11 h-11" stroke="currentColor" stroke-width="2">
+                                <path d="M36 10C22 10 12 18 12 31C12 34.5 13.5 37 16 38C28 38 38 28 38 14C38 11.5 37.2 10 36 10Z" stroke-linejoin="round"/>
+                                <path d="M11 39C16 31 23 24 33 16" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-bold text-base sm:text-lg text-[#141414]">Bahan Segar</h3>
+                        <p class="text-xs sm:text-sm text-gray-600 max-w-[200px]">
+                            Selalu fresh setiap hari.
+                        </p>
+                    </div>
+
+                    <!-- Pilar 3: Suasana Nyaman -->
+                    <div class="flex flex-col items-center space-y-3 p-4 rounded-2xl hover:bg-gray-50 transition-colors">
+                        <div class="w-14 h-14 flex items-center justify-center text-[#141414]">
+                            <!-- Icon Grup Orang Minimalis -->
+                            <svg viewBox="0 0 48 48" fill="currentColor" class="w-11 h-11">
+                                <circle cx="24" cy="16" r="5"/>
+                                <path d="M14 34C14 28.4772 18.4772 24 24 24C29.5228 24 34 28.4772 34 34V36H14V34Z"/>
+                                <circle cx="13" cy="19" r="3.5" opacity="0.8"/>
+                                <path d="M6 34C6 30.134 9.13401 27 13 27C14.2 27 15.3 27.3 16.3 27.8C14.8 29.5 14 31.6 14 34V36H6V34Z" opacity="0.8"/>
+                                <circle cx="35" cy="19" r="3.5" opacity="0.8"/>
+                                <path d="M42 34C42 30.134 38.866 27 35 27C33.8 27 32.7 27.3 31.7 27.8C33.2 29.5 34 31.6 34 34V36H42V34Z" opacity="0.8"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-bold text-base sm:text-lg text-[#141414]">Suasana Nyaman</h3>
+                        <p class="text-xs sm:text-sm text-gray-600 max-w-[200px]">
+                            Tempat yang cocok untuk semua.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <hr class="border-gray-200">
+        </div>
+
+        <!-- ==================== SECTION 4: GALLERY (Desktop - 5 Atas) ==================== -->
+        <section id="gallery" class="py-16 sm:py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Judul & Subjudul Tengah sesuai desain -->
+                <div class="text-center max-w-lg mx-auto mb-12">
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#141414] mb-2">Galeri & Suasana</h2>
+                    <p class="text-xs sm:text-sm font-medium text-gray-600">
+                        Lihat suasana dan momen di Bean & Bloom
+                    </p>
+                </div>
+
+                <!-- Grid 3x2 (6 Foto Sudut Membulat Besar) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                    <!-- Foto 1: Interior Warm Cafe -->
+                    <div onclick="openLightbox('https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=1200&q=85', 'Suasana hangat di area utama Bean & Bloom')" class="group relative overflow-hidden rounded-[20px] aspect-[4/3] cursor-pointer bg-neutral-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=800&q=80" alt="Suasana Kafe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end p-4">
+                            <span class="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Lihat Foto
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Foto 2: Biji Kopi & Packaging -->
+                    <div onclick="openLightbox('https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1200&q=85', 'Biji kopi pilihan house blend Bean & Bloom')" class="group relative overflow-hidden rounded-[20px] aspect-[4/3] cursor-pointer bg-neutral-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80" alt="Biji Kopi Kemasan" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end p-4">
+                            <span class="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Lihat Foto
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Foto 3: Latte Art di Meja Marmer -->
+                    <div onclick="openLightbox('https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=1200&q=85', 'Signature Latte Art dibuat segar setiap pesanan')" class="group relative overflow-hidden rounded-[20px] aspect-[4/3] cursor-pointer bg-neutral-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80" alt="Latte Art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end p-4">
+                            <span class="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Lihat Foto
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Foto 4: Barista di Mesin Espresso -->
+                    <div onclick="openLightbox('https://images.unsplash.com/photo-1507914372368-b2b085b925a1?auto=format&fit=crop&w=1200&q=85', 'Barista kami meracik espresso dengan presisi')" class="group relative overflow-hidden rounded-[20px] aspect-[4/3] cursor-pointer bg-neutral-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1507914372368-b2b085b925a1?auto=format&fit=crop&w=800&q=80" alt="Barista Espresso" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end p-4">
+                            <span class="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Lihat Foto
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Foto 5: Cozy Lounge Corner -->
+                    <div onclick="openLightbox('https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1200&q=85', 'Sudut santai yang nyaman untuk bekerja atau berbincang')" class="group relative overflow-hidden rounded-[20px] aspect-[4/3] cursor-pointer bg-neutral-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=800&q=80" alt="Sudut Nyaman Kafe" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end p-4">
+                            <span class="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Lihat Foto
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Foto 6: Etalase Pastry & Croissant -->
+                    <div onclick="openLightbox('https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=85', 'Aneka pastry dan roti panggang segar setiap pagi')" class="group relative overflow-hidden rounded-[20px] aspect-[4/3] cursor-pointer bg-neutral-200 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80" alt="Etalase Pastry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end p-4">
+                            <span class="text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Lihat Foto
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <hr class="border-gray-200">
+        </div>
+
+        <!-- ==================== SECTION 5: CONTACT & RESERVASI (Desktop - 5 Bawah - Dilengkapi) ==================== -->
+        <section id="contact" class="py-16 sm:py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+                    
+                    <!-- Kolom Kiri: Peta Lokasi Gaya Clean Vector Map seperti Desain Figma + Info Lokasi -->
+                    <div class="lg:col-span-5 flex flex-col justify-between bg-[#F7F6F2] rounded-[28px] overflow-hidden border border-gray-200 shadow-sm">
+                        
+                        <!-- Ilustrasi Peta Interaktif yang mirip persis dengan desain Figma -->
+                        <div class="relative w-full h-72 sm:h-80 lg:h-full min-h-[290px] bg-[#EFECE6] overflow-hidden">
+                            <svg viewBox="0 0 400 360" class="w-full h-full object-cover" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Latar belakang blok kota -->
+                                <rect width="400" height="360" fill="#F2EFE9"/>
+                                <!-- Taman / Area Hijau -->
+                                <polygon points="30,40 120,25 140,95 45,115" fill="#A5F285" opacity="0.85"/>
+                                <polygon points="245,85 335,60 355,130 270,150" fill="#9AE87A" opacity="0.85"/>
+                                <polygon points="235,235 345,215 365,295 255,315" fill="#A5F285" opacity="0.85"/>
+                                <polygon points="25,250 115,240 125,320 35,330" fill="#BCE8A6" opacity="0.6"/>
+                                
+                                <!-- Jalan Raya Kuning & Putih -->
+                                <path d="M-10 150 L410 90" stroke="#FDE28A" stroke-width="18" stroke-linecap="round"/>
+                                <path d="M90 -10 L175 370" stroke="#FDE28A" stroke-width="16" stroke-linecap="round"/>
+                                <path d="M210 -10 L195 370" stroke="#FFFFFF" stroke-width="12"/>
+                                <path d="M-10 230 L410 185" stroke="#FFFFFF" stroke-width="14"/>
+                                <path d="M40 370 L320 -10" stroke="#FDE28A" stroke-width="12" opacity="0.85"/>
+                                <path d="M280 140 L315 370" stroke="#FFFFFF" stroke-width="10"/>
+
+                                <!-- Pin Lokasi Merah Bean & Bloom (Berdenyut halus) -->
+                                <g transform="translate(200, 175)">
+                                    <ellipse cx="0" cy="16" rx="14" ry="5" fill="rgba(0,0,0,0.18)"/>
+                                    <path d="M0 -34 C-14 -34 -24 -23 -24 -10 C-24 7 0 18 0 18 C0 18 24 7 24 -10 C24 -23 14 -34 0 -34 Z" fill="#FF3B30"/>
+                                    <circle cx="0" cy="-12" r="8" fill="#FFFFFF"/>
+                                </g>
+                            </svg>
+
+                            <!-- Floating Card Alamat di atas peta -->
+                            <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-md border border-gray-100 flex items-center justify-between gap-3">
+                                <div>
+                                    <p class="text-xs font-bold text-black">Bean & Bloom CAFFE</p>
+                                    <p class="text-[11px] text-gray-600 mt-0.5">Jl. Senopati No. 45, Kebayoran Baru, Jakarta Selatan</p>
+                                </div>
+                                <a href="https://maps.google.com/?q=Senopati+Jakarta+Selatan" target="_blank" rel="noopener noreferrer" class="shrink-0 bg-black text-white text-[11px] font-medium px-3.5 py-2 rounded-full hover:bg-neutral-800 transition-colors flex items-center gap-1">
+                                    <span>Maps</span>
+                                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Kolom Kanan: Kartu Form "Reserve Your Table" (Dilengkapi dengan tombol submit & validasi) -->
+                    <div class="lg:col-span-7 bg-[#E5E5E5] rounded-[32px] p-7 sm:p-10 lg:p-12 shadow-sm">
+                        <div class="mb-7">
+                            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#141414] mb-1.5">
+                                Reserve Your Table
+                            </h2>
+                            <p class="text-xs sm:text-sm text-gray-700">
+                                Pesan tempat dudukmu sekarang dan nikmati pengalaman terbaik di Bean & Bloom
+                            </p>
+                        </div>
+
+                        <form id="reservation-form" class="space-y-4">
+                            <!-- Field 1: Nama -->
+                            <div>
+                                <label for="res-name" class="block text-xs font-bold text-[#141414] mb-1.5">Nama</label>
+                                <input 
+                                    type="text" 
+                                    id="res-name" 
+                                    required
+                                    placeholder="Masukkan nama lengkap Anda" 
+                                    class="reserve-input w-full px-4 py-3 text-sm font-medium"
+                                >
+                            </div>
+
+                            <!-- Field 2: Tanggal -->
+                            <div>
+                                <label for="res-date" class="block text-xs font-bold text-[#141414] mb-1.5">Tanggal</label>
+                                <input 
+                                    type="date" 
+                                    id="res-date" 
+                                    required
+                                    class="reserve-input w-full px-4 py-3 text-sm font-medium"
+                                >
+                            </div>
+
+                            <!-- Grid 2 Kolom untuk Waktu & Jumlah Orang agar proporsional -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Field 3: Waktu (Melengkapi field yang terpotong di desain) -->
+                                <div>
+                                    <label for="res-time" class="block text-xs font-bold text-[#141414] mb-1.5">Waktu</label>
+                                    <select id="res-time" required class="reserve-input w-full px-4 py-3 text-sm font-medium">
+                                        <option value="" disabled selected>Pilih jam kedatangan</option>
+                                        <option value="08:00 WIB">08:00 WIB (Pagi)</option>
+                                        <option value="10:00 WIB">10:00 WIB (Brunch)</option>
+                                        <option value="13:00 WIB">13:00 WIB (Siang)</option>
+                                        <option value="16:00 WIB">16:00 WIB (Sore / Golden Hour)</option>
+                                        <option value="19:00 WIB">19:00 WIB (Malam)</option>
+                                        <option value="20:30 WIB">20:30 WIB (Malam)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Field 4: Jumlah Orang -->
+                                <div>
+                                    <label for="res-guests" class="block text-xs font-bold text-[#141414] mb-1.5">Jumlah Orang</label>
+                                    <select id="res-guests" required class="reserve-input w-full px-4 py-3 text-sm font-medium">
+                                        <option value="1 Orang">1 Orang (Solo / Work)</option>
+                                        <option value="2 Orang" selected>2 Orang (Couple / Duo)</option>
+                                        <option value="4 Orang">4 Orang (Small Group)</option>
+                                        <option value="6 Orang">6 Orang (Family / Meeting)</option>
+                                        <option value="8+ Orang">8+ Orang (Large Table)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Catatan Tambahan Opsional -->
+                            <div>
+                                <label for="res-notes" class="block text-xs font-bold text-[#141414] mb-1.5">Catatan Khusus (Opsional)</label>
+                                <input 
+                                    type="text" 
+                                    id="res-notes" 
+                                    placeholder="Contoh: Area dekat jendela, kursi bayi, dll." 
+                                    class="reserve-input w-full px-4 py-3 text-sm font-medium"
+                                >
+                            </div>
+
+                            <!-- Tombol Submit Pill Hitam (Melengkapi bagian akhir form) -->
+                            <div class="pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-black text-white text-sm font-medium px-8 py-3.5 rounded-full hover:bg-neutral-800 active:scale-95 transition-all shadow-md">
+                                    <span>Konfirmasi Reservasi</span>
+                                    <span aria-hidden="true">→</span>
+                                </button>
+                                <span class="text-[11px] text-gray-600">
+                                    *Gratis pembatalan hingga 2 jam sebelum kedatangan.
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER LENGKAP (Bagian Terakhir Website) ==================== -->
+    <footer class="bg-[#141414] text-white pt-14 pb-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/15">
+                
+                <!-- Kolom 1: Brand & Deskripsi -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center">
+                            <i data-lucide="coffee" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="font-serif font-bold text-xl tracking-tight block">Bean & Bloom</span>
+                            <span class="text-[10px] tracking-[0.25em] text-gray-400 uppercase block">CAFFE</span>
+                        </div>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-400 leading-relaxed max-w-sm">
+                        Tempat di mana kopi berkualitas, suasana hangat, dan cerita bermakna bertemu. Diseduh dengan sepenuh hati setiap hari.
+                    </p>
+                    <!-- Social Media Icons -->
+                    <div class="flex items-center gap-3 pt-1">
+                        <a href="#contact" aria-label="Instagram Bean & Bloom" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center transition-colors">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#contact" aria-label="WhatsApp Bean & Bloom" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center transition-colors">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#contact" aria-label="Email Bean & Bloom" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white hover:text-black flex items-center justify-center transition-colors">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Kolom 2: Navigasi Cepat -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-white">Navigasi</h4>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#menu" class="hover:text-white transition-colors">Menu Kami</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors">Tentang Kami</a></li>
+                        <li><a href="#gallery" class="hover:text-white transition-colors">Galeri</a></li>
+                        <li><a href="#contact" class="hover:text-white transition-colors">Reservasi Meja</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Jam Operasional -->
+                <div class="lg:col-span-3 space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-white">Jam Operasional</h4>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-gray-400">
+                        <li class="flex justify-between">
+                            <span>Senin – Jumat</span>
+                            <span class="text-white font-medium">07:00 – 22:00</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Sabtu – Minggu</span>
+                            <span class="text-white font-medium">07:30 – 23:00</span>
+                        </li>
+                        <li class="pt-1 text-xs text-emerald-400 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Buka Hari Ini • Dine-in & Takeaway
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 4: Alamat & Kontak -->
+                <div class="lg:col-span-3 space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-white">Lokasi & Kontak</h4>
+                    <ul class="space-y-2.5 text-xs sm:text-sm text-gray-400">
+                        <li class="flex items-start gap-2.5">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-white shrink-0 mt-0.5"></i>
+                            <span>Jl. Senopati No. 45, Kebayoran Baru, Jakarta Selatan 12190</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <i data-lucide="phone" class="w-4 h-4 text-white shrink-0"></i>
+                            <span>+62 812-3456-7890</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <i data-lucide="mail" class="w-4 h-4 text-white shrink-0"></i>
+                            <span>halo@beanandbloom.id</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Copyright Bar -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+                <p>© 2026 Bean & Bloom Caffe. All rights reserved.</p>
+                <p>Dibuat dengan penuh kehangatan untuk pecinta kopi Indonesia.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== DRAWER KERANJANG BELANJA INTERAKTIF ==================== -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 hidden transition-opacity"></div>
+    <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Header Drawer -->
+        <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <i data-lucide="shopping-bag" class="w-5 h-5 text-black"></i>
+                <h3 class="font-serif text-lg font-bold text-black">Pesanan Anda</h3>
+            </div>
+            <button onclick="toggleCart()" class="p-2 rounded-full hover:bg-gray-100 text-gray-600 hover:text-black">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Daftar Item Keranjang -->
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <!-- Diisi dinamis lewat JavaScript -->
+        </div>
+
+        <!-- Footer Drawer: Total & Checkout -->
+        <div class="p-6 border-t border-gray-200 bg-gray-50 space-y-4">
+            <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-600">Subtotal Pesanan</span>
+                <span id="cart-total" class="font-bold text-lg text-black">Rp. 0</span>
+            </div>
+            <button id="checkout-btn" onclick="processCheckout()" disabled class="w-full bg-black text-white text-sm font-medium py-3.5 rounded-full hover:bg-neutral-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2">
+                <span>Pesan Sekarang</span>
+                <span>→</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ==================== MODAL KONFIRMASI RESERVASI / PESANAN ==================== -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-7 sm:p-8 shadow-2xl animate-fade-up relative">
+            <button onclick="closeConfirmationModal()" class="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 text-gray-500">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mb-4">
+                <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+            </div>
+
+            <h3 id="modal-title" class="font-serif text-2xl font-bold text-black mb-1">Reservasi Berhasil!</h3>
+            <p id="modal-subtitle" class="text-xs sm:text-sm text-gray-600 mb-5">
+                Meja Anda telah kami siapkan. Tunjukkan kode booking di bawah ini saat tiba di kafe.
+            </p>
+
+            <!-- Detail Tiket -->
+            <div id="modal-details" class="bg-[#F5F5F5] rounded-2xl p-4 space-y-2.5 text-xs sm:text-sm mb-6 border border-gray-200">
+                <!-- Diisi dinamis -->
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="closeConfirmationModal()" class="w-full bg-black text-white text-xs sm:text-sm font-medium py-3 rounded-full hover:bg-neutral-800 transition-colors">
+                    Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL CERITA TENTANG KAMI ==================== -->
+    <div id="story-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-7 sm:p-8 shadow-2xl animate-fade-up relative">
+            <button onclick="closeStoryModal()" class="absolute top-5 right-5 p-2 rounded-full hover:bg-gray-100 text-gray-500">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Our Story</span>
+            <h3 class="font-serif text-2xl font-bold text-black mt-1 mb-4">Filosofi Bean & Bloom</h3>
+            <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+                <p>
+                    Didirikan pada tahun 2021, <strong>Bean & Bloom CAFFE</strong> bermula dari sebuah ruang kecil dengan satu mesin espresso dan mimpi sederhana: menghadirkan kopi nusantara berkualitas tinggi dalam suasana yang terasa seperti rumah kedua.
+                </p>
+                <p>
+                    Kami bekerja sama langsung dengan petani kopi lokal di Aceh Gayo, Toraja, dan Flores untuk memastikan setiap biji kopi dipanen secara etis dan disangrai (roasting) setiap minggu agar kesegaran aromanya tetap terjaga.
+                </p>
+                <p>
+                    Baik Anda datang untuk menyelesaikan pekerjaan, berdiskusi hangat bersama sahabat, atau sekadar menikmati ketenangan sore hari—kami selalu menyiapkan secangkir kebahagiaan untuk Anda.
+                </p>
+            </div>
+            <div class="mt-6">
+                <button onclick="closeStoryModal()" class="w-full bg-black text-white text-sm font-medium py-3 rounded-full hover:bg-neutral-800 transition-colors">
+                    Tutup Cerita
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL LIGHTBOX GALERI ==================== -->
+    <div id="lightbox-modal" onclick="closeLightbox()" class="fixed inset-0 bg-black/85 z-50 hidden items-center justify-center p-4">
+        <div class="max-w-3xl w-full relative" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute -top-11 right-0 text-white hover:text-gray-300 flex items-center gap-1 text-sm">
+                <span>Tutup</span> <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <img id="lightbox-img" src="" alt="Preview Galeri" class="w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl">
+            <p id="lightbox-caption" class="text-white text-center text-sm mt-3 font-medium"></p>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST NOTIFICATION ==================== -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#141414] text-white text-xs sm:text-sm font-medium px-5 py-3 rounded-full shadow-xl flex items-center gap-2.5 opacity-0 pointer-events-none transition-all duration-300 translate-y-3">
+        <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">Ditambahkan ke keranjang</span>
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // 1. DATA MENU LENGKAP (Sesuai gambar desain + item tambahan untuk Non-Kopi & Makanan)
+        const menuData = [
+            {
+                id: 1,
+                name: "Espresso",
+                price: 12000,
+                category: "Kopi",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 2,
+                name: "Americano",
+                price: 15000,
+                category: "Kopi",
+                favorite: true,
+                image: "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 3,
+                name: "Latte",
+                price: 19000,
+                category: "Kopi",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 4,
+                name: "Cappuccino",
+                price: 18000,
+                favoritePrice: 20000, // Sesuai harga pada frame Home (Rp. 20.000) & Menu (Rp. 18.000)
+                category: "Kopi",
+                favorite: true,
+                image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 5,
+                name: "Caramel Macchiato",
+                price: 22000,
+                category: "Kopi",
+                favorite: true,
+                image: "https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 6,
+                name: "Mocha",
+                price: 20000,
+                category: "Kopi",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 7,
+                name: "Matcha",
+                price: 20000,
+                category: "Non-Kopi",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 8,
+                name: "Chocolate",
+                price: 20000,
+                category: "Non-Kopi",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 9,
+                name: "Iced Latte",
+                price: 18000,
+                category: "Kopi",
+                favorite: true,
+                onlyFavorite: true, // Tampil di grid Favorite sesuai desain Desktop 1
+                image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 10,
+                name: "Lychee Tea",
+                price: 16000,
+                category: "Non-Kopi",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 11,
+                name: "Butter Croissant",
+                price: 18000,
+                category: "Makanan",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 12,
+                name: "Burnt Cheesecake",
+                price: 25000,
+                category: "Makanan",
+                favorite: false,
+                image: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        // State keranjang belanja
+        let cart = [];
+
+        // Format Rupiah sesuai gaya desain ("Rp. 18.000")
+        function formatRupiah(angka) {
+            return "Rp. " + angka.toLocaleString("id-ID");
+        }
+
+        // 2. RENDER MENU FAVORITE (Urutan persis sesuai Desktop 1: Iced Latte, Cappuccino, Americano, Caramel Macchiato)
+        function renderFavoriteMenu() {
+            const favOrder = ["Iced Latte", "Cappuccino", "Americano", "Caramel Macchiato"];
+            const favContainer = document.getElementById("favorite-grid");
+            
+            const favItems = favOrder.map(name => menuData.find(item => item.name === name)).filter(Boolean);
+
+            favContainer.innerHTML = favItems.map(item => {
+                const displayPrice = item.favoritePrice || item.price;
+                return `
+                    <div class="group flex flex-col">
+                        <div class="relative aspect-square rounded-2xl overflow-hidden bg-[#FAFAFA] mb-3 border border-gray-100">
+                            <img 
+                                src="${item.image}" 
+                                alt="${item.name}" 
+                                onerror="this.src='https://placehold.co/400x400/F5F5F5/141414?text=${encodeURIComponent(item.name)}'"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            >
+                            <button 
+                                onclick="addToCart(${item.id}, ${displayPrice})"
+                                aria-label="Tambah ${item.name} ke keranjang"
+                                class="absolute bottom-3 right-3 bg-black/90 text-white text-xs font-medium px-3.5 py-2 rounded-full opacity-95 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-black active:scale-95 transition-all shadow-md flex items-center gap-1"
+                            >
+                                <span>+ Pesan</span>
+                            </button>
+                        </div>
+                        <h3 class="font-bold text-sm sm:text-base text-[#141414]">${item.name}</h3>
+                        <p class="text-xs sm:text-sm text-gray-600 mt-0.5">${formatRupiah(displayPrice)}</p>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // 3. RENDER MENU KAMI DENGAN FILTER KATEGORI
+        function renderMenu(category = "Semua") {
+            const menuGrid = document.getElementById("menu-grid");
+            
+            // Filter item (kecuali item yang khusus tampilan favorite saja jika di tab Semua, agar mirip grid 8 item Frame 1)
+            let filtered = menuData.filter(item => !item.onlyFavorite);
+            if (category !== "Semua") {
+                filtered = menuData.filter(item => item.category === category);
+            }
+
+            menuGrid.innerHTML = filtered.map(item => `
+                <div class="group flex flex-col animate-fade-up">
+                    <div class="relative aspect-square rounded-2xl overflow-hidden bg-[#FAFAFA] mb-3 border border-gray-100">
+                        <img 
+                            src="${item.image}" 
+                            alt="${item.name}" 
+                            onerror="this.src='https://placehold.co/400x400/F5F5F5/141414?text=${encodeURIComponent(item.name)}'"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        >
+                        <button 
+                            onclick="addToCart(${item.id}, ${item.price})"
+                            class="absolute bottom-3 right-3 bg-black text-white text-xs font-medium px-3.5 py-2 rounded-full opacity-95 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-neutral-800 active:scale-95 transition-all shadow-md flex items-center gap-1"
+                        >
+                            <span>+ Keranjang</span>
+                        </button>
+                    </div>
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base text-[#141414]">${item.name}</h3>
+                            <p class="text-xs sm:text-sm text-gray-600 mt-0.5">${formatRupiah(item.price)}</p>
+                        </div>
+                        <button 
+                            onclick="addToCart(${item.id}, ${item.price})"
+                            title="Tambah ke Keranjang"
+                            class="sm:hidden w-8 h-8 rounded-full bg-gray-100 hover:bg-black hover:text-white flex items-center justify-center text-black transition-colors shrink-0"
+                        >
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join("");
+
+            lucide.createIcons();
+        }
+
+        // Event Listener Tombol Filter Kategori
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                // Reset styling semua tombol
+                document.querySelectorAll(".filter-btn").forEach(b => {
+                    b.classList.remove("bg-black", "text-white", "active");
+                    b.classList.add("bg-[#A6A6A6]", "text-[#141414]");
+                });
+
+                // Aktifkan tombol yang diklik
+                btn.classList.remove("bg-[#A6A6A6]", "text-[#141414]");
+                btn.classList.add("bg-black", "text-white", "active");
+
+                renderMenu(btn.dataset.category);
+            });
+        });
+
+        // 4. LOGIKA KERANJANG BELANJA (CART)
+        function addToCart(id, customPrice = null) {
+            const product = menuData.find(item => item.id === id);
+            if (!product) return;
+
+            const finalPrice = customPrice || product.price;
+            const existing = cart.find(item => item.id === id && item.price === finalPrice);
+
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: finalPrice,
+                    image: product.image,
+                    qty: 1
+                });
+            }
+
+            updateCartUI();
+            showToast(`${product.name} ditambahkan ke keranjang`);
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById("cart-badge");
+            const container = document.getElementById("cart-items-container");
+            const totalEl = document.getElementById("cart-total");
+            const checkoutBtn = document.getElementById("checkout-btn");
+
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            badge.textContent = totalQty;
+            totalEl.textContent = formatRupiah(totalPrice);
+            checkoutBtn.disabled = cart.length === 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12 text-gray-400">
+                        <i data-lucide="coffee" class="w-12 h-12 mb-3 stroke-[1.5]"></i>
+                        <p class="text-sm font-medium text-gray-600">Keranjang Anda masih kosong</p>
+                        <p class="text-xs mt-1">Pilih kopi atau pastry favorit Anda dari menu kami.</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = cart.map((item, idx) => `
+                    <div class="flex items-center gap-3.5 bg-white p-3 rounded-2xl border border-gray-100 shadow-xs">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover bg-gray-100 shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-sm text-black truncate">${item.name}</h4>
+                            <p class="text-xs text-gray-500 mt-0.5">${formatRupiah(item.price)}</p>
+                            <div class="flex items-center gap-2.5 mt-2">
+                                <button onclick="changeQty(${idx}, -1)" class="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-xs font-bold">-</button>
+                                <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                                <button onclick="changeQty(${idx}, 1)" class="w-6 h-6 rounded-full bg-black text-white hover:bg-neutral-800 flex items-center justify-center text-xs font-bold">+</button>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-xs sm:text-sm text-black">${formatRupiah(item.price * item.qty)}</p>
+                        </div>
+                    </div>
+                `).join("");
+            }
+
+            lucide.createIcons();
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById("cart-drawer");
+            const overlay = document.getElementById("cart-overlay");
+            const isOpen = !drawer.classList.contains("translate-x-full");
+
+            if (isOpen) {
+                drawer.classList.add("translate-x-full");
+                overlay.classList.add("hidden");
+            } else {
+                drawer.classList.remove("translate-x-full");
+                overlay.classList.remove("hidden");
+            }
+        }
+
+        // Proses Checkout Pesanan dari Keranjang
+        function processCheckout() {
+            if (cart.length === 0) return;
+
+            const orderCode = "BB-" + Math.floor(100000 + Math.random() * 900000);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const itemsSummary = cart.map(i => `${i.qty}x ${i.name}`).join(", ");
+
+            toggleCart();
+
+            document.getElementById("modal-title").textContent = "Pesanan Diterima!";
+            document.getElementById("modal-subtitle").textContent = "Barista kami segera menyiapkan pesanan Anda. Silakan lakukan pembayaran di kasir.";
+            document.getElementById("modal-details").innerHTML = `
+                <div class="flex justify-between"><span class="text-gray-500">Kode Pesanan</span><span class="font-bold text-black">${orderCode}</span></div>
+                <div class="flex justify-between gap-4"><span class="text-gray-500 shrink-0">Item</span><span class="font-medium text-right text-black">${itemsSummary}</span></div>
+                <div class="border-t border-gray-200 pt-2 flex justify-between"><span class="text-gray-500">Total Bayar</span><span class="font-bold text-black">${formatRupiah(totalPrice)}</span></div>
+            `;
+
+            openConfirmationModal();
+            cart = [];
+            updateCartUI();
+        }
+
+        // 5. FORM RESERVASI MEJA (Bagian Terakhir yang Dilengkapi)
+        document.getElementById("reservation-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById("res-name").value.trim();
+            const date = document.getElementById("res-date").value;
+            const time = document.getElementById("res-time").value;
+            const guests = document.getElementById("res-guests").value;
+            const notes = document.getElementById("res-notes").value.trim();
+
+            if (!name || !date || !time) return;
+
+            // Format tanggal ke Bahasa Indonesia
+            const formattedDate = new Date(date).toLocaleDateString("id-ID", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+            const bookingCode = "RSV-" + Math.floor(1000 + Math.random() * 9000);
+
+            document.getElementById("modal-title").textContent = "Reservasi Meja Berhasil!";
+            document.getElementById("modal-subtitle").textContent = "Terima kasih! Meja Anda telah berhasil dipesan di Bean & Bloom CAFFE.";
+            document.getElementById("modal-details").innerHTML = `
+                <div class="flex justify-between"><span class="text-gray-500">Kode Booking</span><span class="font-bold text-black">${bookingCode}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Atas Nama</span><span class="font-bold text-black">${name}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Tanggal</span><span class="font-medium text-black">${formattedDate}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Waktu</span><span class="font-medium text-black">${time}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Jumlah Tamu</span><span class="font-medium text-black">${guests}</span></div>
+                ${notes ? `<div class="flex justify-between gap-4"><span class="text-gray-500">Catatan</span><span class="font-medium text-right text-black">${notes}</span></div>` : ""}
+            `;
+
+            openConfirmationModal();
+            this.reset();
+        });
+
+        // 6. HELPER MODALS, LIGHTBOX, TOAST & NAVIGASI
+        function openConfirmationModal() {
+            const modal = document.getElementById("confirmation-modal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeConfirmationModal() {
+            const modal = document.getElementById("confirmation-modal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        function openStoryModal() {
+            const modal = document.getElementById("story-modal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeStoryModal() {
+            const modal = document.getElementById("story-modal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        function openLightbox(src, caption) {
+            document.getElementById("lightbox-img").src = src;
+            document.getElementById("lightbox-caption").textContent = caption;
+            const lb = document.getElementById("lightbox-modal");
+            lb.classList.remove("hidden");
+            lb.classList.add("flex");
+        }
+
+        function closeLightbox() {
+            const lb = document.getElementById("lightbox-modal");
+            lb.classList.add("hidden");
+            lb.classList.remove("flex");
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toast-message").textContent = msg;
+            toast.classList.remove("opacity-0", "translate-y-3");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add("opacity-0", "translate-y-3");
+            }, 2400);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        }
+
+        function closeMobileMenu() {
+            document.getElementById("mobile-menu").classList.add("hidden");
+        }
+
+        // Active Nav Link saat di-scroll
+        window.addEventListener("scroll", () => {
+            const sections = ["home", "menu", "about", "gallery", "contact"];
+            let current = "home";
+
+            sections.forEach(id => {
+                const section = document.getElementById(id);
+                if (section && window.scrollY >= section.offsetTop - 140) {
+                    current = id;
+                }
+            });
+
+            document.querySelectorAll(".nav-link").forEach(link => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === `#${current}`) {
+                    link.classList.add("active");
+                }
+            });
+        });
+
+        // Set tanggal minimum input reservasi ke hari ini
+        window.addEventListener("DOMContentLoaded", () => {
+            const today = new Date().toISOString().split("T")[0];
+            document.getElementById("res-date").setAttribute("min", today);
+
+            renderFavoriteMenu();
+            renderMenu("Semua");
+            updateCartUI();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
